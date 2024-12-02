@@ -161,3 +161,9 @@ class Ui_MainWindow(object):
         self.setColor_l.setText(_translate("MainWindow", "..."))
         self.setPenWidth_l.setText(_translate("MainWindow", "..."))
         self.openimage.setText(_translate("MainWindow", "..."))
+
+
+
+        # font, ok = QFontDialog.getFont(self)
+        # if ok:
+        #         self.current_font = font

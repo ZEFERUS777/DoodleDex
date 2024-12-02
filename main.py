@@ -1,4 +1,6 @@
-from PyQt6.QtGui import QAction
+import sys
+
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from tools.tools import Canvas
@@ -14,6 +16,44 @@ class Window(QMainWindow):
     def initUI(self):
         self.setWindowTitle('Paint Application')
         self.setGeometry(100, 100, 800, 600)
+
+        # Apply styles
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #f0f0f0;
+            }
+            QMenuBar {
+                background-color: #333;
+                color: #fff;
+            }
+            QMenuBar::item {
+                background-color: #333;
+                color: #fff;
+            }
+            QMenuBar::item:selected {
+                background-color: #555;
+            }
+            QMenu {
+                background-color: #333;
+                color: #fff;
+            }
+            QMenu::item {
+                background-color: #333;
+                color: #fff;
+            }
+            QMenu::item:selected {
+                background-color: #555;
+            }
+            QPushButton {
+                background-color: #333;
+                color: #fff;
+                border: none;
+                padding: 5px 10px;
+            }
+            QPushButton:hover {
+                background-color: #555;
+            }
+        """)
 
         # File menu
         menubar = self.menuBar()
@@ -139,7 +179,6 @@ class Window(QMainWindow):
 
 
 if __name__ == '__main__':
-    import sys
     app = QApplication(sys.argv)
     window = Window()
     window.show()
