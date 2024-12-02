@@ -1,8 +1,8 @@
 from math import atan2, cos, sin, radians
 
 from PyQt6.QtCore import QPoint, QPointF, Qt
-from PyQt6.QtGui import QBrush, QColor, QPainter, QMouseEvent, QImage, QPixmap, QFont, QPen, QKeyEvent
-from PyQt6.QtWidgets import QWidget, QFileDialog, QColorDialog, QInputDialog
+from PyQt6.QtGui import QBrush, QColor, QPainter, QMouseEvent, QImage, QPixmap, QFont, QPen
+from PyQt6.QtWidgets import QWidget, QFileDialog, QColorDialog, QInputDialog, QFontDialog
 
 
 class BrushPoint:
@@ -209,10 +209,10 @@ class Canvas(QWidget):
                 Arrow(event.position().x(), event.position().y(), event.position().x(), event.position().y(),
                       self.current_color, self.current_pen_width))
         elif self.instrument == "text":
-            self.drawing_text = True
-            self.text_start_pos = event.position()
-            self.objects.append(Text(self.text_start_pos.x(), self.text_start_pos.y(), self.text, self.current_font,
-                                     self.current_color))
+            text, ok = QInputDialog.getText(self, 'Text', 'Enter text:')
+            if ok and text:
+                self.objects.append(Text(event.position().x(), event.position().y(), text, self.current_font,
+                                         self.current_color))
         elif self.instrument == "image" and self.current_image:
             self.objects.append(Image(event.position().x(), event.position().y(), self.current_image))
         self.update()
@@ -241,16 +241,6 @@ class Canvas(QWidget):
             self.objects[-1].ex = int(event.position().x())
             self.objects[-1].ey = int(event.position().y())
         self.update()
-
-    def keyPressEvent(self, event: QKeyEvent):
-        if self.drawing_text and event.key() != Qt.Key_Return and event.key() != Qt.Key_Enter:
-            self.text += event.text()
-            self.objects[-1].text = self.text
-            self.update()
-        elif self.drawing_text and (event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter):
-            self.drawing_text = False
-            self.instrument = 'brush'
-            self.update()
 
     def setBrush(self):
         self.instrument = 'brush'
@@ -286,7 +276,7 @@ class Canvas(QWidget):
         self.fill_color = QColorDialog.getColor()
 
     def setFont(self):
-        font, ok = QInputDialog.getFont(self, "Set Font", "Font", QFont("Arial"))
+        font, ok = QFontDialog.getFont(self)
         if ok:
             self.current_font = font
 
