@@ -1,9 +1,8 @@
-import sys
 from math import atan2, cos, sin, radians
+
 from PyQt6.QtCore import QPoint, QPointF, Qt
-from PyQt6.QtGui import QBrush, QColor, QPainter, QMouseEvent, QAction, QImage, QPixmap, QFont, QPen, QKeyEvent
-from PyQt6.QtWidgets import QMainWindow, QApplication, QWidget, QFileDialog, QLabel, QVBoxLayout, QComboBox, \
-    QColorDialog, QInputDialog
+from PyQt6.QtGui import QBrush, QColor, QPainter, QMouseEvent, QImage, QPixmap, QFont, QPen, QKeyEvent
+from PyQt6.QtWidgets import QWidget, QFileDialog, QColorDialog, QInputDialog
 
 
 class BrushPoint:
@@ -176,6 +175,7 @@ class Canvas(QWidget):
             "Dash Dot Dot": Qt.PenStyle.DashDotDotLine
         }
         self.current_brush_style = self.brush_styles["Solid"]
+        self.fill_color = QColor(255, 255, 255)  # Default fill color is white
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -211,7 +211,6 @@ class Canvas(QWidget):
         elif self.instrument == "text":
             self.drawing_text = True
             self.text_start_pos = event.position()
-            self.text = ""
             self.objects.append(Text(self.text_start_pos.x(), self.text_start_pos.y(), self.text, self.current_font,
                                      self.current_color))
         elif self.instrument == "image" and self.current_image:
@@ -244,11 +243,11 @@ class Canvas(QWidget):
         self.update()
 
     def keyPressEvent(self, event: QKeyEvent):
-        if self.drawing_text and event.key() != Qt.Key.Return and event.key() != Qt.Key.Enter:
+        if self.drawing_text and event.key() != Qt.Key_Return and event.key() != Qt.Key_Enter:
             self.text += event.text()
             self.objects[-1].text = self.text
             self.update()
-        elif self.drawing_text and (event.key() == Qt.Key.Return or event.key() == Qt.Key.Enter):
+        elif self.drawing_text and (event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter):
             self.drawing_text = False
             self.instrument = 'brush'
             self.update()
@@ -283,8 +282,11 @@ class Canvas(QWidget):
     def setColor(self):
         self.current_color = QColorDialog.getColor()
 
+    def setFill(self):
+        self.fill_color = QColorDialog.getColor()
+
     def setFont(self):
-        font, ok = QInputDialog.getfont(self, "Set Font", "Font", QFont("Arial"))
+        font, ok = QInputDialog.getFont(self, "Set Font", "Font", QFont("Arial"))
         if ok:
             self.current_font = font
 
@@ -312,14 +314,25 @@ class Canvas(QWidget):
         file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "",
                                                    "JPEG Files (*.jpg);;PNG Files (*.png);;All Files (*)")
         if file_name:
-            image = QImage(self.size(), QImage.Format.Format_ARGB32)
-            painter = QPainter(image)
-            self.paintEvent(None)
-            painter.end()
-            image.save(file_name)
+            pixmap = QPixmap(self.size())
+            self.render(pixmap)
+            pixmap.save(file_name)
 
     def openImage(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open Image", "",
                                                    "JPEG Files (*.jpg);;PNG Files (*.png);;All Files (*)")
         if file_name:
             self.current_image = QImage(file_name)
+            self.update()
+
+    def zoomIn(self):
+        self.scale(1.2, 1.2)
+        self.update()
+
+    def zoomOut(self):
+        self.scale(0.8, 0.8)
+        self.update()
+
+    def resetZoom(self):
+        self.resetTransform()
+        self.update()

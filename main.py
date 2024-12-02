@@ -1,5 +1,5 @@
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QApplication
+from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from tools.tools import Canvas
 
@@ -70,6 +70,13 @@ class Window(QMainWindow):
         image_action.triggered.connect(self.canvas.setImage)
         tools_menu.addAction(image_action)
 
+        # Fill menu
+        fill_menu = menubar.addMenu('Fill')
+
+        fill_action = QAction('Set Fill Color', self)
+        fill_action.triggered.connect(self.canvas.setFill)
+        fill_menu.addAction(fill_action)
+
         # Color menu
         color_menu = menubar.addMenu('Color')
 
@@ -114,6 +121,21 @@ class Window(QMainWindow):
         clear_action = QAction('Clear', self)
         clear_action.triggered.connect(self.canvas.clean)
         edit_menu.addAction(clear_action)
+
+        # View menu
+        view_menu = menubar.addMenu('View')
+
+        zoom_in_action = QAction('Zoom In', self)
+        zoom_in_action.triggered.connect(self.canvas.zoomIn)
+        view_menu.addAction(zoom_in_action)
+
+        zoom_out_action = QAction('Zoom Out', self)
+        zoom_out_action.triggered.connect(self.canvas.zoomOut)
+        view_menu.addAction(zoom_out_action)
+
+        reset_zoom_action = QAction('Reset Zoom', self)
+        reset_zoom_action.triggered.connect(self.canvas.resetZoom)
+        view_menu.addAction(reset_zoom_action)
 
 
 if __name__ == '__main__':
