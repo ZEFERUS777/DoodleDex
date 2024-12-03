@@ -161,6 +161,7 @@ class Image:
             print(e)
             print("Image not found")
 
+
 class Canvas(QWidget):
     def __init__(self):
         super().__init__()
@@ -186,6 +187,12 @@ class Canvas(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
+
+        # Рисовать фоновое изображение, если оно загружено
+        if self.current_image:
+            painter.drawPixmap(0, 0, self.current_image)
+
+        # Рисовать все объекты
         for obj in self.objects:
             obj.draw(painter)
 
@@ -323,7 +330,13 @@ class Canvas(QWidget):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open Image", "",
                                                    "JPEG Files (*.jpg);;PNG Files (*.png);;All Files (*)")
         if file_name:
-            self.current_image = QImage(file_name)
+            # Очистить все предыдущие объекты
+            self.objects = []
+
+            # Загрузить изображение и масштабировать его до размеров окна
+            self.current_image = QPixmap(file_name).scaled(self.size(), Qt.AspectRatioMode.KeepAspectRatio)
+
+            # Обновить холст
             self.update()
 
     def zoomIn(self):
