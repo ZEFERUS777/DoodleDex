@@ -395,3 +395,4 @@ class Canvas(QWidget):
         self.resetTransform()
         self.update()
         logger.debug('Resetting zoom')
+
