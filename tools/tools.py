@@ -13,6 +13,7 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
+
 class BrushPoint:
     def __init__(self, x, y, color=QColor(0, 0, 0), pen_width=1):
         self.x = int(x)
@@ -25,6 +26,7 @@ class BrushPoint:
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawEllipse(self.x - 5, self.y - 5, 10, 10)
         logger.debug(f'Painting brush at ({self.x}, {self.y}) with color {self.color}')
+
 
 class Line:
     def __init__(self, sx, sy, ex, ey, color=QColor(0, 0, 0), pen_width=1):
@@ -41,6 +43,7 @@ class Line:
         painter.drawLine(self.sx, self.sy, self.ex, self.ey)
         logger.debug(f'Painting line from ({self.sx}, {self.sy}) to ({self.ex}, {self.ey})')
 
+
 class Circle:
     def __init__(self, cx, cy, x, y, color=QColor(0, 0, 0), pen_width=1):
         self.cx = int(cx)
@@ -56,6 +59,7 @@ class Circle:
         radius = int(((self.cx - self.x) ** 2 + (self.cy - self.y) ** 2) ** 0.5)
         painter.drawEllipse(self.cx - radius, self.cy - radius, 2 * radius, 2 * radius)
         logger.debug(f'Painting circle at ({self.cx}, {self.cy}) with radius {radius}')
+
 
 class Triangle:
     def __init__(self, x1, y1, x2, y2, x3, y3, color=QColor(0, 0, 0), pen_width=1):
@@ -75,6 +79,7 @@ class Triangle:
         painter.drawPolygon([QPoint(x, y) for x, y in points])
         logger.debug(f'Painting triangle at ({self.x1}, {self.y1}), ({self.x2}, {self.y2}), ({self.x3}, {self.y3})')
 
+
 class Square:
     def __init__(self, x, y, width, color=QColor(0, 0, 0), pen_width=1):
         self.x = int(x)
@@ -88,6 +93,7 @@ class Square:
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawRect(self.x, self.y, self.width, self.width)
         logger.debug(f'Painting square at ({self.x}, {self.y}) with width {self.width}')
+
 
 class Star:
     def __init__(self, x, y, outer_radius, inner_radius, color=QColor(0, 0, 0), pen_width=1):
@@ -113,7 +119,9 @@ class Star:
             points.append(QPoint(int(x), int(y)))
             angle += 36
         painter.drawPolygon(points)
-        logger.debug(f'Painting star at ({self.x}, {self.y}) with outer radius {self.outer_radius} and inner radius {self.inner_radius}')
+        logger.debug(
+            f'Painting star at ({self.x}, {self.y}) with outer radius {self.outer_radius} and inner radius {self.inner_radius}')
+
 
 class Arrow:
     def __init__(self, sx, sy, ex, ey, color=QColor(0, 0, 0), pen_width=1):
@@ -138,6 +146,7 @@ class Arrow:
         painter.drawPolygon([QPointF(self.ex, self.ey), p1, p2])
         logger.debug(f'Painting arrow from ({self.sx}, {self.sy}) to ({self.ex}, {self.ey})')
 
+
 class Text:
     def __init__(self, x, y, text, font, color=QColor(0, 0, 0)):
         self.x = int(x)
@@ -151,6 +160,7 @@ class Text:
         painter.setFont(self.font)
         painter.drawText(self.x, self.y, self.text)
         logger.debug(f'Painting text "{self.text}" at ({self.x}, {self.y})')
+
 
 class Image:
     def __init__(self, x, y, path, width=100, height=100):
@@ -169,6 +179,7 @@ class Image:
         except Exception as e:
             logger.error(f'Error drawing image: {e}')
             QMessageBox.critical(None, 'Ошибка', str(e))
+
 
 class Canvas(QWidget):
     def __init__(self):
@@ -371,12 +382,12 @@ class Canvas(QWidget):
             logger.debug(f'Opening image from {file_name}')
 
     def zoomIn(self):
-        self.scale(1.2, 1.2)
+        self.current_image.scale(1.2, 1.2)
         self.update()
         logger.debug('Zooming in')
 
     def zoomOut(self):
-        self.scale(0.8, 0.8)
+        self.current_image.scale(0.8, 0.8)
         self.update()
         logger.debug('Zooming out')
 

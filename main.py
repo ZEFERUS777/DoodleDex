@@ -1,6 +1,4 @@
 import sys
-from distutils.core import setup
-from webbrowser import open_new
 
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow
