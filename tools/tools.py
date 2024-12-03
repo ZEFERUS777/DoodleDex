@@ -2,7 +2,7 @@ from math import atan2, cos, sin, radians
 
 from PyQt6.QtCore import QPoint, QPointF, Qt
 from PyQt6.QtGui import QBrush, QColor, QPainter, QMouseEvent, QImage, QPixmap, QFont, QPen
-from PyQt6.QtWidgets import QWidget, QFileDialog, QColorDialog, QInputDialog, QFontDialog
+from PyQt6.QtWidgets import QWidget, QFileDialog, QColorDialog, QInputDialog, QFontDialog, QLabel
 
 
 class BrushPoint:
@@ -145,14 +145,21 @@ class Text:
 
 
 class Image:
-    def __init__(self, x, y, image):
+    def __init__(self, x, y, path, width=100, height=100):
         self.x = int(x)
         self.y = int(y)
-        self.image = image
+        self.path = path
+        self.pixmap = QPixmap(self.path)
+        self.width = width
+        self.height = height
+        self.scaled_pixmap = self.pixmap.scaled(self.width, self.height)
 
     def draw(self, painter: QPainter):
-        painter.drawImage(self.x, self.y, self.image)
-
+        try:
+            painter.drawPixmap(self.x, self.y, self.scaled_pixmap)
+        except Exception as e:
+            print(e)
+            print("Image not found")
 
 class Canvas(QWidget):
     def __init__(self):
@@ -213,8 +220,12 @@ class Canvas(QWidget):
             if ok and text:
                 self.objects.append(Text(event.position().x(), event.position().y(), text, self.current_font,
                                          self.current_color))
-        elif self.instrument == "image" and self.current_image:
-            self.objects.append(Image(event.position().x(), event.position().y(), self.current_image))
+        elif self.instrument == "image_p":
+            path, _ = QFileDialog.getOpenFileName(self, 'Open Image', '', 'Image Files (*.png *.jpg *.bmp)')
+            width, _ = QInputDialog.getInt(self, 'Enter width', 'Enter width')
+            height, okay = QInputDialog.getInt(self, 'Enter height', 'Enter height')
+            if okay:
+                self.objects.append(Image(event.position().x(), event.position().y(), path, width=width, height=height))
         self.update()
 
     def mouseMoveEvent(self, event: QMouseEvent):
@@ -267,7 +278,7 @@ class Canvas(QWidget):
         self.instrument = 'text'
 
     def setImage(self):
-        self.instrument = 'image'
+        self.instrument = 'image_p'
 
     def setColor(self):
         self.current_color = QColorDialog.getColor()
