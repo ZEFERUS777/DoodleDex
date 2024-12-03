@@ -1,4 +1,6 @@
 import sys
+from distutils.core import setup
+from webbrowser import open_new
 
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow
@@ -14,7 +16,7 @@ class Window(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Paint Application')
+        self.setWindowTitle('DoodleDex')
         self.setGeometry(100, 100, 800, 600)
 
         # Apply styles
@@ -53,6 +55,19 @@ class Window(QMainWindow):
             QPushButton:hover {
                 background-color: #555;
             }
+            QColorDialog {
+            background-color: rgb(0, 0, 0);
+                color: #fff;
+            }
+            QColorDialog::button-box {
+                background-color: #333;
+            }
+            QColorDialog::button-box QPushButton {
+                background-color: #333;
+                color: #fff;
+            }
+            QColorDialog::button-box QPushButton:hover {
+                background-color: #555;
         """)
 
         # File menu
@@ -60,10 +75,12 @@ class Window(QMainWindow):
         file_menu = menubar.addMenu('File')
 
         save_action = QAction('Save', self)
+        save_action.setIcon(QIcon('icons/save_as_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         save_action.triggered.connect(self.canvas.saveImage)
         file_menu.addAction(save_action)
 
         open_action = QAction('Open', self)
+        open_action.setIcon(QIcon('icons/open_in_browser_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         open_action.triggered.connect(self.canvas.openImage)
         file_menu.addAction(open_action)
 
@@ -75,38 +92,47 @@ class Window(QMainWindow):
         tools_menu = menubar.addMenu('Tools')
 
         brush_action = QAction('Brush', self)
+        brush_action.setIcon(QIcon('icons/brush_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         brush_action.triggered.connect(self.canvas.setBrush)
         tools_menu.addAction(brush_action)
 
         line_action = QAction('Line', self)
+        line_action.setIcon(QIcon('icons/diagonal_line_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         line_action.triggered.connect(self.canvas.setLine)
         tools_menu.addAction(line_action)
 
         circle_action = QAction('Circle', self)
+        circle_action.setIcon(QIcon('icons/animation_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         circle_action.triggered.connect(self.canvas.setCircle)
         tools_menu.addAction(circle_action)
 
         triangle_action = QAction('Triangle', self)
+        triangle_action.setIcon(QIcon('icons/change_history_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         triangle_action.triggered.connect(self.canvas.setTriangle)
         tools_menu.addAction(triangle_action)
 
         square_action = QAction('Square', self)
+        square_action.setIcon(QIcon('icons/check_box_outline_blank_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         square_action.triggered.connect(self.canvas.setSquare)
         tools_menu.addAction(square_action)
 
         star_action = QAction('Star', self)
+        star_action.setIcon(QIcon('icons/star_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         star_action.triggered.connect(self.canvas.setStar)
         tools_menu.addAction(star_action)
 
         arrow_action = QAction('Arrow', self)
+        arrow_action.setIcon(QIcon('icons/arrow_forward_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         arrow_action.triggered.connect(self.canvas.setArrow)
         tools_menu.addAction(arrow_action)
 
         text_action = QAction('Text', self)
+        text_action.setIcon(QIcon('icons/text_fields_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         text_action.triggered.connect(self.canvas.setText)
         tools_menu.addAction(text_action)
 
         image_action = QAction('Image', self)
+        image_action.setIcon(QIcon('icons/open_in_browser_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         image_action.triggered.connect(self.canvas.setImage)
         tools_menu.addAction(image_action)
 
@@ -114,6 +140,7 @@ class Window(QMainWindow):
         fill_menu = menubar.addMenu('Fill')
 
         fill_action = QAction('Set Fill Color', self)
+        fill_action.setIcon(QIcon('icons/format_paint_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         fill_action.triggered.connect(self.canvas.setFill)
         fill_menu.addAction(fill_action)
 
@@ -121,6 +148,7 @@ class Window(QMainWindow):
         color_menu = menubar.addMenu('Color')
 
         color_action = QAction('Set Color', self)
+        color_action.setIcon(QIcon('icons/palette_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         color_action.triggered.connect(self.canvas.setColor)
         color_menu.addAction(color_action)
 
@@ -151,10 +179,14 @@ class Window(QMainWindow):
         edit_menu = menubar.addMenu('Edit')
 
         undo_action = QAction('Undo', self)
+        undo_action.setShortcut('Ctrl+Z')
+        undo_action.setIcon(QIcon('icons/undo_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         undo_action.triggered.connect(self.canvas.undo)
         edit_menu.addAction(undo_action)
 
         redo_action = QAction('Redo', self)
+        redo_action.setShortcut('Ctrl+X')
+        redo_action.setIcon(QIcon('icons/redo_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         redo_action.triggered.connect(self.canvas.redo)
         edit_menu.addAction(redo_action)
 
