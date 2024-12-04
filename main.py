@@ -19,69 +19,95 @@ class Window(QMainWindow):
 
         # Apply styles
         self.setStyleSheet("""
-            QMainWindow {
-                background-color: #f0f0f0;
-            }
-            QMenuBar {
-                background-color: #333;
-                color: #fff;
-            }
-            QMenuBar::item {
-                background-color: #333;
-                color: #fff;
-            }
-            QMenuBar::item:selected {
-                background-color: #555;
-            }
-            QMenu {
-                background-color: #333;
-                color: #fff;
-            }
-            QMenu::item {
-                background-color: #333;
-                color: #fff;
-            }
-            QMenu::item:selected {
-                background-color: #555;
-            }
-            QPushButton {
-                background-color: #333;
-                color: #fff;
-                border: none;
-                padding: 5px 10px;
-            }
-            QPushButton:hover {
-                background-color: #555;
-            }
-            QColorDialog {
-            background-color: rgb(0, 0, 0);
-                color: #fff;
-                border: none;
-            }
-            QColorDialog::button-box {
-                background-color: #333;
-            }
-            QColorDialog::button-box QPushButton {
-                background-color: #333;
-                color: #fff;
-            }
-            QColorDialog::button-box QPushButton:hover {
-                background-color: #555;
-            }
-            QColorDialog {
-                background-color: rgb(0, 0, 0);
-                color: #fff;
-                border: none;
-            }
-            QColorDialog::button-box {
-                background-color: #333;
-            }
-            QColorDialog::button-box QPushButton {
-                background-color: #333;
-                color: #fff;
-            }
-            QColorDialog::button-box QPushButton:hover {
-                background-color: #555;
+                QMainWindow {
+                    background-color: #f0f0f0;
+                }
+                
+                QMenuBar {
+                    background-color: #333;
+                    color: #fff;
+                    border-bottom: 1px solid #444;
+                }
+                
+                QMenuBar::item {
+                    background-color: #333;
+                    color: #fff;
+                }
+                
+                QMenuBar::item:selected {
+                    background-color: #555;
+                }
+                
+                QMenu {
+                    background-color: #333;
+                    color: #fff;
+                    border: 1px solid #444;
+                }
+                
+                QMenu::item {
+                    background-color: transparent;
+                }
+                
+                QMenu::item:selected {
+                    background-color: #555;
+                }
+                
+                
+                QPushButton {
+                    background-color: #333;
+                    color: #fff;
+                    border: none;
+                    padding: 5px 15px;
+                    margin: 2px;
+                    border-radius: 5px;
+                }
+                
+                QPushButton:hover {
+                    background-color: #555;
+                }
+                
+                QPushButton:pressed {
+                    background-color: #444;
+                }
+                
+                QColorDialog {
+                    background-color: #333;
+                    color: #fff;
+                    border: none;
+                }
+                
+                QColorDialog::button-box {
+                    background-color: #333;
+                    border-top: 1px solid #444;
+                }
+                
+                QColorDialog::button-box QPushButton {
+                    background-color: #333;
+                    color: #fff;
+                    border: none;
+                    padding: 5px 15px;
+                }
+                
+                QColorDialog::button-box QPushButton:hover {
+                    background-color: #555;
+                }
+                
+                QColorDialog::button-box QPushButton:pressed {
+                    background-color: #444;
+                }
+                
+                QFileDialog {
+                    background-color: #f0f0f0;
+                    color: #000;
+                }
+                
+                QFileDialog::item {
+                    padding: 5px;
+                }
+                
+                QFileDialog::item:selected {
+                    background-color: #ddd;
+                }
         """)
 
         # File menu
