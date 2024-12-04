@@ -203,13 +203,16 @@ class Canvas(QWidget):
         }
         self.current_brush_style = self.brush_styles["Solid"]
         self.fill_color = QColor(255, 255, 255)  # Default fill color is white
+        self.zoom_factor = 1.0
 
     def paintEvent(self, event):
         painter = QPainter(self)
 
         # Рисовать фоновое изображение, если оно загружено
         if self.current_image:
-            painter.drawPixmap(0, 0, self.current_image)
+            scaled_image = self.current_image.scaled(self.current_image.size() * self.zoom_factor,
+                                                     Qt.AspectRatioMode.KeepAspectRatio)
+            painter.drawPixmap(0, 0, scaled_image)
             logger.debug('Drawing background image')
 
         # Рисовать все объекты
@@ -382,17 +385,16 @@ class Canvas(QWidget):
             logger.debug(f'Opening image from {file_name}')
 
     def zoomIn(self):
-        self.current_image.scale(1.2, 1.2)
+        self.zoom_factor *= 1.2
         self.update()
         logger.debug('Zooming in')
 
     def zoomOut(self):
-        self.current_image.scale(0.8, 0.8)
+        self.zoom_factor /= 1.2
         self.update()
         logger.debug('Zooming out')
 
     def resetZoom(self):
-        self.resetTransform()
+        self.zoom_factor = 1.0
         self.update()
         logger.debug('Resetting zoom')
-

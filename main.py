@@ -56,6 +56,22 @@ class Window(QMainWindow):
             QColorDialog {
             background-color: rgb(0, 0, 0);
                 color: #fff;
+                border: none;
+            }
+            QColorDialog::button-box {
+                background-color: #333;
+            }
+            QColorDialog::button-box QPushButton {
+                background-color: #333;
+                color: #fff;
+            }
+            QColorDialog::button-box QPushButton:hover {
+                background-color: #555;
+            }
+            QColorDialog {
+                background-color: rgb(0, 0, 0);
+                color: #fff;
+                border: none;
             }
             QColorDialog::button-box {
                 background-color: #333;
@@ -205,10 +221,12 @@ class Window(QMainWindow):
         view_menu = menubar.addMenu('View')
 
         zoom_in_action = QAction('Zoom In', self)
+        zoom_in_action.setShortcut('Ctrl++')
         zoom_in_action.triggered.connect(self.canvas.zoomIn)
         view_menu.addAction(zoom_in_action)
 
         zoom_out_action = QAction('Zoom Out', self)
+        zoom_out_action.setShortcut('Ctrl+-')
         zoom_out_action.triggered.connect(self.canvas.zoomOut)
         view_menu.addAction(zoom_out_action)
 
