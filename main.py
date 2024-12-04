@@ -3,7 +3,7 @@ import sys
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
-from tools.tools import Canvas
+from tools.canvas import Canvas
 
 
 class Window(QMainWindow):
