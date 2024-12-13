@@ -41,7 +41,7 @@ class Circle:
         self.pen_width = pen_width
 
     def draw(self, painter: QPainter):
-        painter.setBrush(QBrush(self.color, Qt.BrushStyle.NoBrush))
+        painter.setBrush(QBrush(self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         radius = int(((self.cx - self.x) ** 2 + (self.cy - self.y) ** 2) ** 0.5)
         painter.drawEllipse(self.cx - radius, self.cy - radius, 2 * radius, 2 * radius)
