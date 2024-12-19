@@ -54,14 +54,13 @@ class HotKey(QWidget, Ui_Form):
         self.ZOOM_OUT = ZOOM_OUT
 
     def apply_hotkeys(self):
-        self.BRUSH_HOT = self.keySequenceEdit.keySequence().toString()
-        self.LINE_HOT = self.keySequenceEdit_2.keySequence().toString()
-        self.CIRCLE_HOT = self.keySequenceEdit_3.keySequence().toString()
-        self.TRIANGLE_HOT = self.keySequenceEdit_4.keySequence().toString()
-        self.SQUARE_HOT = self.keySequenceEdit_5.keySequence().toString()
-        self.STAR_MOT = self.keySequenceEdit_6.keySequence().toString()
-        self.ARROW_MOT = self.keySequenceEdit_7.keySequence().toString()
-        self.TEXT_HOT = self.keySequenceEdit_8.keySequence().toString()
-
-        print(self.SAVE_HOT, self.BRUSH_HOT, self.LINE_HOT, self.CIRCLE_HOT, self.TRIANGLE_HOT, self.SQUARE_HOT,
-              self.STAR_MOT, self.ARROW_MOT, self.TEXT_HOT)
+        self.BRUSH_HOT = self.keySequenceEdit.keySequence().toString() if self.keySequenceEdit.keySequence().toString() else self.BRUSH_HOT
+        self.LINE_HOT = self.keySequenceEdit_2.keySequence().toString() if self.keySequenceEdit_2.keySequence().toString() else self.LINE_HOT
+        self.CIRCLE_HOT = self.keySequenceEdit_3.keySequence().toString() if self.keySequenceEdit_3.keySequence().toString() else self.CIRCLE_HOT
+        self.TRIANGLE_HOT = self.keySequenceEdit_4.keySequence().toString() if self.keySequenceEdit_4.keySequence().toString() else self.TRIANGLE_HOT
+        self.SQUARE_HOT = self.keySequenceEdit_5.keySequence().toString() if self.keySequenceEdit_5.keySequence().toString() else self.SQUARE_HOT
+        self.STAR_MOT = self.keySequenceEdit_6.keySequence().toString() if self.keySequenceEdit_6.keySequence().toString() else self.STAR_MOT
+        self.ARROW_MOT = self.keySequenceEdit_7.keySequence().toString() if self.keySequenceEdit_7.keySequence().toString() else self.ARROW_MOT
+        self.SAVE_HOT = self.keySequenceEdit_8.keySequence().toString() if self.keySequenceEdit_8.keySequence().toString() else self.SAVE_HOT
+        self.UNDO_HOT = self.keySequenceEdit_9.keySequence().toString() if self.keySequenceEdit_9.keySequence().toString() else self.UNDO_HOT
+        self.REDO_HOT = self.keySequenceEdit_10.keySequence().toString() if self.keySequenceEdit_10.keySequence().toString() else self.REDO_HOT
