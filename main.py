@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow
 from tools.canvas import Canvas
 from windows.hotkey_selection_window import HotKey
 
+
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -265,7 +266,8 @@ class Window(QMainWindow):
         setting_action = QAction('Setting', self)
         setting_menu.addAction(setting_action)
         setting_action.triggered.connect(self.open_hotkey_window)
-# Reinitialize UI to apply new shortcuts
+
+    # Reinitialize UI to apply new shortcuts
     def open_hotkey_window(self):
         self.h.show()
         self.h.apply_btn.clicked.connect(self.reinit_hot)
@@ -284,6 +286,7 @@ class Window(QMainWindow):
         self.line_action.setShortcut(self.h.LINE_HOT)
         self.circle_action.setShortcut(self.h.CIRCLE_HOT)
         self.h.close()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

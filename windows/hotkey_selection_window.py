@@ -4,21 +4,38 @@ from PyQt6.QtCore import pyqtSignal
 
 from windows.HotKey import Ui_Form
 
-SAVE_HOT = 'Ctrl+S'
-BRUSH_HOT = 'F1'
-LINE_HOT = 'F2'
-CIRCLE_HOT = 'F3'
-TRIANGLE_HOT = 'F4'
-SQUARE_HOT = 'F5'
-STAR_MOT = 'F6'
-ARROW_MOT = 'F7'
+SAVE_HOT = None
+BRUSH_HOT = None
+LINE_HOT = None
+CIRCLE_HOT = None
+TRIANGLE_HOT = None
+SQUARE_HOT = None
+STAR_MOT = None
+ARROW_MOT = None
 TEXT_HOT = 'F8'
 
-UNDO_HOT = 'Ctrl+Z'
-REDO_HOT = 'Ctrl+Y'
+UNDO_HOT = None
+REDO_HOT = None
 
-ZOOM_IN = 'Ctrl+='
-ZOOM_OUT = 'Ctrl+-'
+ZOOM_IN = None
+ZOOM_OUT = None
+
+with open('settings.txt', 'r') as f:
+    lines = f.readlines()
+    SAVE_HOT = lines[0].strip()
+    BRUSH_HOT = lines[1].strip()
+    LINE_HOT = lines[2].strip()
+    CIRCLE_HOT = lines[3].strip()
+    TRIANGLE_HOT = lines[4].strip()
+    SQUARE_HOT = lines[5].strip()
+    STAR_MOT = lines[6].strip()
+    ARROW_MOT = lines[7].strip()
+    TEXT_HOT = lines[8].strip()
+    UNDO_HOT = lines[9].strip()
+    REDO_HOT = lines[10].strip()
+    ZOOM_IN = lines[11].strip()
+    ZOOM_OUT = lines[12].strip()
+    f.close()
 
 
 class HotKey(QWidget, Ui_Form):
@@ -64,3 +81,20 @@ class HotKey(QWidget, Ui_Form):
         self.SAVE_HOT = self.keySequenceEdit_8.keySequence().toString() if self.keySequenceEdit_8.keySequence().toString() else self.SAVE_HOT
         self.UNDO_HOT = self.keySequenceEdit_9.keySequence().toString() if self.keySequenceEdit_9.keySequence().toString() else self.UNDO_HOT
         self.REDO_HOT = self.keySequenceEdit_10.keySequence().toString() if self.keySequenceEdit_10.keySequence().toString() else self.REDO_HOT
+
+    def closeEvent(self, a0):
+        with open('.\settings.txt', 'w') as f:
+            f.write(self.SAVE_HOT + '\n')
+            f.write(self.BRUSH_HOT + '\n')
+            f.write(self.LINE_HOT + '\n')
+            f.write(self.CIRCLE_HOT + '\n')
+            f.write(self.TRIANGLE_HOT + '\n')
+            f.write(self.SQUARE_HOT + '\n')
+            f.write(self.STAR_MOT + '\n')
+            f.write(self.ARROW_MOT + '\n')
+            f.write(self.TEXT_HOT + '\n')
+            f.write(self.UNDO_HOT + '\n')
+            f.write(self.REDO_HOT + '\n')
+            f.write(self.ZOOM_IN + '\n')
+            f.write(self.ZOOM_OUT + '\n')
+            f.close()
