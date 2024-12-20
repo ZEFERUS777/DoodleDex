@@ -18,12 +18,16 @@
 ## Purpose of folders and files
 **icons** - иконки для приложения \
 **tools** - Python пакет с модулем **tools.py** внутри\
-**tools.tools.py** - модуль backend для работы:
+**tools.brushes.py** - модуль backend для работы:
 1. **Сохранения изображения**
 2. **Открытия изображения**
 3. **Логирования**
 4. **Рисования фигур**
 
+**tools.canvas.py** - файл с классом холста \
+**windows.HotKey.py** - файл с окном выбора горячих клавиш\
+**windows.hotkey_selection_window.py** - файл для управления и сохранения горячих клавиш\
+**settings.txt** - файл с настройками \
 **main.py** - главный файл frontend для приложения
 
 ## Libraries for application operation
