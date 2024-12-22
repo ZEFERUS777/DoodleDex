@@ -17,7 +17,7 @@ class Window(QMainWindow):
     def initUI(self):
         self.setWindowTitle('DoodleDex')
         self.setGeometry(100, 100, 800, 600)
-
+        self.setWindowIcon(QIcon('icons/free-icon-painting-1728614.png'))
         # Apply styles
         self.setStyleSheet("""
                 QMainWindow {

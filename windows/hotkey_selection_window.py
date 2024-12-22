@@ -44,6 +44,7 @@ class HotKey(QWidget, Ui_Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setFixedSize(self.width(), self.height())
         self.apply_btn = QPushButton('Apply', self)
         self.apply_btn.move(self.label_11.x() + 15, self.label_11.y() - 25)
         self.apply_btn.setStyleSheet("""
