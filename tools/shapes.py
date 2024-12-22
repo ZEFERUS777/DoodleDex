@@ -1,6 +1,6 @@
 from math import atan2, cos, sin, radians
 from PyQt6.QtCore import QPoint, QPointF, Qt
-from PyQt6.QtGui import QBrush, QColor, QPainter, QPen, QPixmap
+from PyQt6.QtGui import QBrush, QColor, QPainter, QPen, QPixmap, QPolygon
 
 
 class BrushPoint:
@@ -11,6 +11,7 @@ class BrushPoint:
         self.pen_width = pen_width
 
     def draw(self, painter: QPainter):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setBrush(QBrush(self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawEllipse(self.x - 5, self.y - 5, 10, 10)
@@ -26,6 +27,7 @@ class Line:
         self.pen_width = pen_width
 
     def draw(self, painter: QPainter):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setBrush(QBrush(self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawLine(self.sx, self.sy, self.ex, self.ey)
@@ -41,6 +43,7 @@ class Circle:
         self.pen_width = pen_width
 
     def draw(self, painter: QPainter):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setBrush(QBrush(self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         radius = int(((self.cx - self.x) ** 2 + (self.cy - self.y) ** 2) ** 0.5)
@@ -48,7 +51,7 @@ class Circle:
 
 
 class Triangle:
-    def __init__(self, x1, y1, x2, y2, x3, y3, color=QColor(0, 0, 0), pen_width=1):
+    def __init__(self, x1, y1, x2, y2, x3, y3, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.x1 = int(x1)
         self.y1 = int(y1)
         self.x2 = int(x2)
@@ -57,12 +60,18 @@ class Triangle:
         self.y3 = int(y3)
         self.color = color
         self.pen_width = pen_width
+        self.fill_color = fill_color if fill_color is not None else color
 
     def draw(self, painter: QPainter):
-        painter.setBrush(QBrush(self.color))
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        painter.setBrush(QBrush(self.fill_color))
         painter.setPen(QPen(self.color, self.pen_width))
-        points = [(self.x1, self.y1), (self.x2, self.y2), (self.x3, self.y3)]
-        painter.drawPolygon([QPoint(x, y) for x, y in points])
+        points = QPolygon([
+            QPoint(self.x1, self.y1),
+            QPoint(self.x2, self.y2),
+            QPoint(self.x3, self.y3)
+        ])
+        painter.drawPolygon(points)
 
 
 class Square:
@@ -74,6 +83,7 @@ class Square:
         self.pen_width = pen_width
 
     def draw(self, painter: QPainter):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setBrush(QBrush(self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawRect(self.x, self.y, self.width, self.width)
@@ -89,6 +99,7 @@ class Star:
         self.pen_width = pen_width
 
     def draw(self, painter: QPainter):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setBrush(QBrush(self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         points = []
@@ -115,6 +126,7 @@ class Arrow:
         self.pen_width = pen_width
 
     def draw(self, painter: QPainter):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setBrush(QBrush(self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawLine(self.sx, self.sy, self.ex, self.ey)
