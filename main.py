@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWidgets import QApplication, QMainWindow, QColorDialog
 
 from tools.canvas import Canvas
 from windows.hotkey_selection_window import HotKey
@@ -191,7 +191,7 @@ class Window(QMainWindow):
 
         self.fill_action = QAction('Set Fill Color', self)
         self.fill_action.setIcon(QIcon('icons/format_paint_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
-        self.fill_action.triggered.connect(self.canvas.setFill)
+        self.fill_action.triggered.connect(self.setfill)
         self.fill_menu.addAction(self.fill_action)
 
         # Color menu
@@ -286,6 +286,10 @@ class Window(QMainWindow):
         self.line_action.setShortcut(self.h.LINE_HOT)
         self.circle_action.setShortcut(self.h.CIRCLE_HOT)
         self.h.close()
+
+    def setfill(self):
+        color = QColorDialog.getColor()
+        self.canvas.setFillColor(color)
 
 
 if __name__ == '__main__':

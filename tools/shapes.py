@@ -1,5 +1,6 @@
 from math import atan2, cos, sin, radians
-from PyQt6.QtCore import QPoint, QPointF, Qt
+
+from PyQt6.QtCore import QPoint, QPointF
 from PyQt6.QtGui import QBrush, QColor, QPainter, QPen, QPixmap, QPolygon
 
 
@@ -18,33 +19,35 @@ class BrushPoint:
 
 
 class Line:
-    def __init__(self, sx, sy, ex, ey, color=QColor(0, 0, 0), pen_width=1):
+    def __init__(self, sx, sy, ex, ey, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.sx = int(sx)
         self.sy = int(sy)
         self.ex = int(ex)
         self.ey = int(ey)
         self.color = color
         self.pen_width = pen_width
+        self.fill_color = fill_color if fill_color else None
 
     def draw(self, painter: QPainter):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        painter.setBrush(QBrush(self.color))
+        painter.setBrush(QBrush(self.fill_color if self.fill_color else self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawLine(self.sx, self.sy, self.ex, self.ey)
 
 
 class Circle:
-    def __init__(self, cx, cy, x, y, color=QColor(0, 0, 0), pen_width=1):
+    def __init__(self, cx, cy, x, y, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.cx = int(cx)
         self.cy = int(cy)
         self.x = int(x)
         self.y = int(y)
         self.color = color
         self.pen_width = pen_width
+        self.fill_color = fill_color if fill_color else None
 
     def draw(self, painter: QPainter):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        painter.setBrush(QBrush(self.color))
+        painter.setBrush(QBrush(self.fill_color if self.fill_color else self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         radius = int(((self.cx - self.x) ** 2 + (self.cy - self.y) ** 2) ** 0.5)
         painter.drawEllipse(self.cx - radius, self.cy - radius, 2 * radius, 2 * radius)
@@ -60,11 +63,11 @@ class Triangle:
         self.y3 = int(y3)
         self.color = color
         self.pen_width = pen_width
-        self.fill_color = fill_color if fill_color is not None else color
+        self.fill_color = fill_color if fill_color else color
 
     def draw(self, painter: QPainter):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        painter.setBrush(QBrush(self.fill_color))
+        painter.setBrush(QBrush(QColor(self.fill_color if self.fill_color else self.color)))
         painter.setPen(QPen(self.color, self.pen_width))
         points = QPolygon([
             QPoint(self.x1, self.y1),
@@ -75,32 +78,34 @@ class Triangle:
 
 
 class Square:
-    def __init__(self, x, y, width, color=QColor(0, 0, 0), pen_width=1):
+    def __init__(self, x, y, width, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.x = int(x)
         self.y = int(y)
         self.width = int(width)
         self.color = color
         self.pen_width = pen_width
+        self.fill_color = fill_color if fill_color else None
 
     def draw(self, painter: QPainter):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        painter.setBrush(QBrush(self.color))
+        painter.setBrush(QBrush(self.fill_color if self.fill_color else self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawRect(self.x, self.y, self.width, self.width)
 
 
 class Star:
-    def __init__(self, x, y, outer_radius, inner_radius, color=QColor(0, 0, 0), pen_width=1):
+    def __init__(self, x, y, outer_radius, inner_radius, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.x = int(x)
         self.y = int(y)
         self.outer_radius = int(outer_radius)
         self.inner_radius = int(inner_radius)
         self.color = color
         self.pen_width = pen_width
+        self.fill_color = fill_color if fill_color else None
 
     def draw(self, painter: QPainter):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        painter.setBrush(QBrush(self.color))
+        painter.setBrush(QBrush(self.fill_color if self.fill_color else self.color))
         painter.setPen(QPen(self.color, self.pen_width))
         points = []
         angle = 0

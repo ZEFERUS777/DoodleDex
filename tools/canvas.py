@@ -35,7 +35,7 @@ class Canvas(QWidget):
             "Dash Dot Dot": Qt.PenStyle.DashDotDotLine
         }
         self.current_brush_style = self.brush_styles["Solid"]
-        self.fill_color = QColor(255, 255, 255)  # Default fill color is white
+        self.fill_color = None # Default fill color is white
         self.zoom_factor = 1.0
 
     def paintEvent(self, event):
@@ -60,21 +60,24 @@ class Canvas(QWidget):
         elif self.instrument == "line":
             self.objects.append(
                 Line(event.position().x(), event.position().y(), event.position().x(), event.position().y(),
-                     self.current_color, self.current_pen_width))
+                     self.current_color, self.current_pen_width, fill_color=self.fill_color))
         elif self.instrument == "circle":
             self.objects.append(
                 Circle(event.position().x(), event.position().y(), event.position().x(), event.position().y(),
-                       self.current_color, self.current_pen_width))
+                       self.current_color, self.current_pen_width, fill_color=self.fill_color))
         elif self.instrument == "triangle":
             self.objects.append(
                 Triangle(event.position().x(), event.position().y(), event.position().x(), event.position().y(),
-                         event.position().x(), event.position().y(), self.current_color, self.current_pen_width))
+                         event.position().x(), event.position().y(), self.current_color, self.current_pen_width,
+                         fill_color=self.fill_color))
         elif self.instrument == "square":
             self.objects.append(
-                Square(event.position().x(), event.position().y(), 0, self.current_color, self.current_pen_width))
+                Square(event.position().x(), event.position().y(), 0, self.current_color, self.current_pen_width,
+                       fill_color=self.fill_color))
         elif self.instrument == "star":
             self.objects.append(
-                Star(event.position().x(), event.position().y(), 0, 0, self.current_color, self.current_pen_width))
+                Star(event.position().x(), event.position().y(), 0, 0, self.current_color,
+                     self.current_pen_width, fill_color=self.fill_color))
         elif self.instrument == "arrow":
             self.objects.append(
                 Arrow(event.position().x(), event.position().y(), event.position().x(), event.position().y(),
@@ -159,10 +162,6 @@ class Canvas(QWidget):
         self.current_color = QColorDialog.getColor()
         logger.debug(f'Setting color to {self.current_color}')
 
-    def setFill(self):
-        self.fill_color = QColorDialog.getColor()
-        logger.debug(f'Setting fill color to {self.fill_color}')
-
     def setFont(self):
         font, ok = QFontDialog.getFont(self)
         if ok:
@@ -176,6 +175,10 @@ class Canvas(QWidget):
     def setBrushStyle(self, style):
         self.current_brush_style = self.brush_styles[style]
         logger.debug(f'Setting brush style to {style}')
+
+    def setFillColor(self, color):
+        self.fill_color = color
+        logger.debug(f'Setting fill color to {self.fill_color}')
 
     def clean(self):
         self.objects = []
