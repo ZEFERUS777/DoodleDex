@@ -1,0 +1,15 @@
+{
+    "SAVE_HOT": "Ctrl+S",
+    "BRUSH_HOT": "2",
+    "LINE_HOT": "3",
+    "CIRCLE_HOT": "4",
+    "TRIANGLE_HOT": "5",
+    "SQUARE_HOT": "F5",
+    "STAR_MOT": "F6",
+    "ARROW_MOT": "F7",
+    "TEXT_HOT": "F8",
+    "UNDO_HOT": "Ctrl+Z",
+    "REDO_HOT": "Ctrl+Y",
+    "ZOOM_IN": "Ctrl+Plus",
+    "ZOOM_OUT": "Ctrl+Minus"
+}

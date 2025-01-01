@@ -1,5 +1,5 @@
 from PyQt6.QtCore import pyqtSignal
-from PyQt6.QtWidgets import QWidget, QPushButton
+from PyQt6.QtWidgets import QWidget, QPushButton, QMessageBox
 
 # Импорт UI-формы
 from windows.HotKey import Ui_Form
@@ -94,12 +94,14 @@ class HotKey(QWidget, Ui_Form):
         self.SAVE_HOT = self.keySequenceEdit_8.keySequence().toString() or self.SAVE_HOT
         self.UNDO_HOT = self.keySequenceEdit_9.keySequence().toString() or self.UNDO_HOT
         self.REDO_HOT = self.keySequenceEdit_10.keySequence().toString() or self.REDO_HOT
+        QMessageBox.information(self, 'Сохранение настроек', 'Настройки сохранены')
 
     def set_default_settings(self):
         """Устанавливает стандартные настройки и сохраняет их в файл"""
         with open('.\\settings.txt', 'w') as f:
             f.write(default_settings)
         self.set_class_variable()
+        QMessageBox.information(self, 'Настройки по умолчанию', 'Настройки выставлены')
 
     def set_def_val_hotkeys(self):
         """Устанавливает значения горячих клавиш по умолчанию"""
