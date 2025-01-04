@@ -175,6 +175,10 @@ class Window(QMainWindow):
         self.arrow_action.triggered.connect(self.canvas.setArrow)
         self.tools_menu.addAction(self.arrow_action)
 
+        self.eraser_action = QAction('Eraser', self)
+        self.eraser_action.triggered.connect(self.canvas.setEraser)
+        self.tools_menu.addAction(self.eraser_action)
+
         self.text_action = QAction('Text', self)
         self.text_action.setIcon(QIcon('icons/text_fields_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg'))
         self.text_action.setShortcut(self.h.TEXT_HOT)

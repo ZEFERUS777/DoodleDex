@@ -174,3 +174,16 @@ class Image:
             painter.drawPixmap(self.x, self.y, self.scaled_pixmap)
         except Exception as e:
             raise ValueError(f'Error drawing image: {e}')
+
+
+class Eraser:
+    def __init__(self, x, y, pen_with=1):
+        self.x = int(x)
+        self.y = int(y)
+        self.pen_with = pen_with
+
+    def draw(self, painter: QPainter):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        painter.setBrush(QBrush(QColor(240, 240, 240)))
+        painter.setPen(QPen(QColor(240, 240, 240), self.pen_with))
+        painter.drawEllipse(self.x, self.y, 10, 10)

@@ -2,7 +2,7 @@ import logging
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QPainter, QPen, QPixmap, QFont, QMouseEvent
 from PyQt6.QtWidgets import QWidget, QFileDialog, QColorDialog, QInputDialog, QFontDialog, QMessageBox
-from tools.shapes import BrushPoint, Line, Circle, Triangle, Square, Star, Arrow, Text, Image
+from tools.shapes import BrushPoint, Line, Circle, Triangle, Square, Star, Arrow, Text, Image, Eraser
 
 # Настройка логирования
 logger = logging.getLogger(__name__)
@@ -57,6 +57,10 @@ class Canvas(QWidget):
         if self.instrument == "brush":
             self.objects.append(
                 BrushPoint(event.position().x(), event.position().y(), self.current_color, self.current_pen_width))
+        elif self.instrument == 'eraser':
+            self.objects.append(
+                Eraser(event.position().x(), event.position().y(), pen_with=self.current_pen_width)
+            )
         elif self.instrument == "line":
             self.objects.append(
                 Line(event.position().x(), event.position().y(), event.position().x(), event.position().y(),
@@ -100,6 +104,10 @@ class Canvas(QWidget):
         if self.instrument == "brush":
             self.objects.append(
                 BrushPoint(event.position().x(), event.position().y(), self.current_color, self.current_pen_width))
+        elif self.instrument == 'eraser':
+            self.objects.append(
+                Eraser(event.position().x(), event.position().y(), pen_with=self.current_pen_width)
+            )
         elif self.instrument == "line":
             self.objects[-1].ex = int(event.position().x())
             self.objects[-1].ey = int(event.position().y())
@@ -153,6 +161,10 @@ class Canvas(QWidget):
     def setText(self):
         self.instrument = 'text'
         logger.debug('Setting instrument to text')
+
+    def setEraser(self):
+        self.instrument = 'eraser'
+        logger.debug('Setting instrument to eraser')
 
     def setImage(self):
         self.instrument = 'image_p'
