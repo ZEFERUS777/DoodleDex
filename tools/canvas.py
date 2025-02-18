@@ -1,7 +1,9 @@
 import logging
+
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QPainter, QPen, QPixmap, QFont, QMouseEvent
-from PyQt6.QtWidgets import QWidget, QFileDialog, QColorDialog, QInputDialog, QFontDialog, QMessageBox
+from PyQt6.QtGui import QColor, QPainter, QPixmap, QFont, QMouseEvent
+from PyQt6.QtWidgets import QWidget, QFileDialog, QColorDialog, QInputDialog, QFontDialog
+
 from tools.shapes import BrushPoint, Line, Circle, Triangle, Square, Star, Arrow, Text, Image, Eraser
 
 # Настройка логирования
@@ -35,7 +37,7 @@ class Canvas(QWidget):
             "Dash Dot Dot": Qt.PenStyle.DashDotDotLine
         }
         self.current_brush_style = self.brush_styles["Solid"]
-        self.fill_color = None # Default fill color is white
+        self.fill_color = None  # Default fill color is white
         self.zoom_factor = 1.0
 
     def paintEvent(self, event):
@@ -127,6 +129,13 @@ class Canvas(QWidget):
         elif self.instrument == "arrow":
             self.objects[-1].ex = int(event.position().x())
             self.objects[-1].ey = int(event.position().y())
+        elif self.instrument == 'move':
+            for obj in self.objects:
+                if obj.contains(event.position()):
+                    proto = type(obj).__name__
+                    if proto == 'Circle':
+                        obj.cx = int(event.position().x())
+                        obj.cy = int(event.position().y())
         self.update()
         logger.debug(f'Mouse move event at ({event.position().x()}, {event.position().y()})')
 
@@ -246,3 +255,6 @@ class Canvas(QWidget):
         self.zoom_factor = 1.0
         self.update()
         logger.debug('Resetting zoom')
+
+    def move_objects(self):
+        self.instrument = 'move'

@@ -1,11 +1,21 @@
-from math import atan2, cos, sin, radians
+from math import atan2, cos, sin, radians, sqrt
 
-from PyQt6.QtCore import QPoint, QPointF
-from PyQt6.QtGui import QBrush, QColor, QPainter, QPen, QPixmap, QPolygon
+from PyQt6.QtCore import QPoint, QPointF, Qt
+from PyQt6.QtGui import QBrush, QColor, QPainter, QPen, QPixmap, QPolygon, QFontMetrics
 
 
-class BrushPoint:
-    def __init__(self, x, y, color=QColor(0, 0, 0), pen_width=1):
+class ShapeMixin:
+    def contains(self, point: QPointF) -> bool:
+        """Проверяет, содержит ли фигура указанную точку."""
+        raise NotImplementedError
+
+    def move(self, dx: int, dy: int):
+        """Перемещает фигуру на заданные координаты."""
+        raise NotImplementedError
+
+
+class BrushPoint(ShapeMixin):
+    def __init__(self, x: int, y: int, color=QColor(0, 0, 0), pen_width=1):
         self.x = int(x)
         self.y = int(y)
         self.color = color
@@ -17,9 +27,12 @@ class BrushPoint:
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawEllipse(self.x - 5, self.y - 5, 10, 10)
 
+    def contains(self, point: QPointF) -> bool:
+        return sqrt((point.x() - self.x) ** 2 + (point.y() - self.y) ** 2) <= 5
 
-class Line:
-    def __init__(self, sx, sy, ex, ey, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
+
+class Line(ShapeMixin):
+    def __init__(self, sx: int, sy: int, ex: int, ey: int, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.sx = int(sx)
         self.sy = int(sy)
         self.ex = int(ex)
@@ -34,9 +47,16 @@ class Line:
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawLine(self.sx, self.sy, self.ex, self.ey)
 
+    def contains(self, point: QPointF) -> bool:
+        # Простая проверка на принадлежность точки линии
+        def distance_to_line(px, py, x1, y1, x2, y2):
+            return abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) / sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
 
-class Circle:
-    def __init__(self, cx, cy, x, y, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
+        return distance_to_line(point.x(), point.y(), self.sx, self.sy, self.ex, self.ey) <= self.pen_width
+
+
+class Circle(ShapeMixin):
+    def __init__(self, cx: int, cy: int, x: int, y: int, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.cx = int(cx)
         self.cy = int(cy)
         self.x = int(x)
@@ -52,9 +72,15 @@ class Circle:
         radius = int(((self.cx - self.x) ** 2 + (self.cy - self.y) ** 2) ** 0.5)
         painter.drawEllipse(self.cx - radius, self.cy - radius, 2 * radius, 2 * radius)
 
+    def contains(self, point: QPointF) -> bool:
+        radius = ((self.cx - self.x) ** 2 + (self.cy - self.y) ** 2) ** 0.5
+        distance = ((point.x() - self.cx) ** 2 + (point.y() - self.cy) ** 2) ** 0.5
+        return distance <= radius
 
-class Triangle:
-    def __init__(self, x1, y1, x2, y2, x3, y3, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
+
+class Triangle(ShapeMixin):
+    def __init__(self, x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, color=QColor(0, 0, 0), pen_width=1,
+                 fill_color=None):
         self.x1 = int(x1)
         self.y1 = int(y1)
         self.x2 = int(x2)
@@ -76,8 +102,18 @@ class Triangle:
         ])
         painter.drawPolygon(points)
 
+    def contains(self, point: QPointF) -> bool:
+        def sign(p1, p2, p3):
+            return (p1.x() - p3.x()) * (p2.y() - p3.y()) - (p2.x() - p3.x()) * (p1.y() - p3.y())
 
-class Square:
+        b1 = sign(point, QPoint(self.x1, self.y1), QPoint(self.x2, self.y2)) < 0.0
+        b2 = sign(point, QPoint(self.x2, self.y2), QPoint(self.x3, self.y3)) < 0.0
+        b3 = sign(point, QPoint(self.x3, self.y3), QPoint(self.x1, self.y1)) < 0.0
+
+        return (b1 == b2) and (b2 == b3)
+
+
+class Square(ShapeMixin):
     def __init__(self, x, y, width, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.x = int(x)
         self.y = int(y)
@@ -92,8 +128,11 @@ class Square:
         painter.setPen(QPen(self.color, self.pen_width))
         painter.drawRect(self.x, self.y, self.width, self.width)
 
+    def contains(self, point: QPointF) -> bool:
+        return self.x <= point.x() <= self.x + self.width and self.y <= point.y() <= self.y + self.width
 
-class Star:
+
+class Star(ShapeMixin):
     def __init__(self, x, y, outer_radius, inner_radius, color=QColor(0, 0, 0), pen_width=1, fill_color=None):
         self.x = int(x)
         self.y = int(y)
@@ -110,18 +149,20 @@ class Star:
         points = []
         angle = 0
         for i in range(10):
-            if i % 2 == 0:
-                r = self.outer_radius
-            else:
-                r = self.inner_radius
+            r = self.outer_radius if i % 2 == 0 else self.inner_radius
             x = self.x + r * cos(radians(angle))
             y = self.y - r * sin(radians(angle))
-            points.append(QPoint(int(x), int(y)))
+            points.append(QPointF(x, y))
             angle += 36
         painter.drawPolygon(points)
 
+    def contains(self, point: QPointF) -> bool:
+        # Проверка на принадлежность точки звезде через полигоны
+        polygon = QPolygon([QPoint(int(p.x()), int(p.y())) for p in points])
+        return polygon.containsPoint(point, Qt.FillRule.OddEvenFill)
 
-class Arrow:
+
+class Arrow(ShapeMixin):
     def __init__(self, sx, sy, ex, ey, color=QColor(0, 0, 0), pen_width=1):
         self.sx = int(sx)
         self.sy = int(sy)
@@ -144,8 +185,15 @@ class Arrow:
                      self.ey - arrow_size * sin(angle - arrow_angle))
         painter.drawPolygon([QPointF(self.ex, self.ey), p1, p2])
 
+    def contains(self, point: QPointF) -> bool:
+        # Проверка на принадлежность точки стрелке
+        def distance_to_line(px, py, x1, y1, x2, y2):
+            return abs((y2 - y1) * px - (x2 - x1) * py + x2 * y1 - y2 * x1) / sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
 
-class Text:
+        return distance_to_line(point.x(), point.y(), self.sx, self.sy, self.ex, self.ey) <= self.pen_width
+
+
+class Text(ShapeMixin):
     def __init__(self, x, y, text, font, color=QColor(0, 0, 0)):
         self.x = int(x)
         self.y = int(y)
@@ -158,8 +206,14 @@ class Text:
         painter.setFont(self.font)
         painter.drawText(self.x, self.y, self.text)
 
+    def contains(self, point: QPointF) -> bool:
+        # Проверка на принадлежность точки тексту
+        metrics = QFontMetrics(self.font)
+        rect = metrics.boundingRect(self.text)
+        return rect.contains(point.x() - self.x, point.y() - self.y)
 
-class Image:
+
+class Image(ShapeMixin):
     def __init__(self, x, y, path, width=100, height=100):
         self.x = int(x)
         self.y = int(y)
@@ -175,8 +229,11 @@ class Image:
         except Exception as e:
             raise ValueError(f'Error drawing image: {e}')
 
+    def contains(self, point: QPointF) -> bool:
+        return self.x <= point.x() <= self.x + self.width and self.y <= point.y() <= self.y + self.height
 
-class Eraser:
+
+class Eraser(ShapeMixin):
     def __init__(self, x, y, pen_with=1):
         self.x = int(x)
         self.y = int(y)
@@ -187,3 +244,6 @@ class Eraser:
         painter.setBrush(QBrush(QColor(240, 240, 240)))
         painter.setPen(QPen(QColor(240, 240, 240), self.pen_with))
         painter.drawEllipse(self.x, self.y, 10, 10)
+
+    def contains(self, point: QPointF) -> bool:
+        return sqrt((point.x() - self.x) ** 2 + (point.y() - self.y) ** 2) <= 5

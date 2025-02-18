@@ -271,6 +271,10 @@ class Window(QMainWindow):
         setting_menu.addAction(setting_action)
         setting_action.triggered.connect(self.open_hotkey_window)
 
+        move_action = QAction('Move objects', self)
+        self.tools_menu.addAction(move_action)
+        move_action.triggered.connect(self.canvas.move_objects)
+
     # Reinitialize UI to apply new shortcuts
     def open_hotkey_window(self):
         self.h.show()
